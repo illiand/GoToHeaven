@@ -77,8 +77,9 @@ public:
 	void drinkProcess();
 	void affectVision();
 
-private:
+public:
 	float value = 0.0f;
+	float timelift = 300;
 
 	TArray<FTimerHandle*> timers;
 	TArray<float> timersElipsed;

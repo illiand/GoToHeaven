@@ -45,6 +45,8 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 
 	value = FMath::Clamp(value - DeltaTime, 0.0f, 200.0f);
 	affectVision();
+
+	timelift -= DeltaTime;
 }
 
 void AGoToHeavenCharacter::drink()
