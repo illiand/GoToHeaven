@@ -76,7 +76,7 @@ void AClock::Tick(float DeltaTime)
 		{
 			if (i + 1 < 13 - h) 
 			{
-				materials[i]->SetScalarParameterValue(TEXT("Alpha"), 0);
+				materials[i]->SetVectorParameterValue(TEXT("Color"), FLinearColor(FVector(0.1f, 0.1f, 0.1f)));
 			}
 		}
 	}
