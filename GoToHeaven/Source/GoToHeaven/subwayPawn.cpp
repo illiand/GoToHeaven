@@ -42,7 +42,6 @@ void AsubwayPawn::BeginPlay()
 void AsubwayPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	SetActorLocation(FVector(-10823.756836f, -211176.4375f, 111772.0f));
 }
 
 // Called to bind functionality to input

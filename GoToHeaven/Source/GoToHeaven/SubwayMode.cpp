@@ -7,7 +7,7 @@ ASubwayMode::ASubwayMode()
 	: Super()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/subway"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/SubwayCharacter1"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	
