@@ -11,6 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Kismet/GameplayStatics.h"
+#include "Components/RectLightComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -45,7 +47,7 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 
 	value = FMath::Clamp(value - DeltaTime, 0.0f, 200.0f);
 	affectVision();
-
+	Episodes();
 	timelift -= DeltaTime;
 	currentTime += DeltaTime;
 }
@@ -174,18 +176,30 @@ void AGoToHeavenCharacter::LookUpAtRate(float Rate)
 void AGoToHeavenCharacter::Episodes()
 {	
 	//episode 1
-	float episode = 0; 
-	
-	if (currentTime < )
+	if (currentTime > 2.0f)
 	{
-
+		AActor* object = getObjectName("light1"); 
+		Cast<URectLightComponent>(object)->SetIntensity(10000);
 	}
 
 
+}
 
+AActor* AGoToHeavenCharacter::getObjectName(FString name)
+{	
+	//get objects
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
 
+	for (AActor* Actor : Actors)
+	{	
+		//UE_LOG(LogTemp, Warning, TEXT("%s"), *UKismetSystemLibrary::GetDisplayName(Actor));
+		if (UKismetSystemLibrary::GetDisplayName(Actor) == name)
+		{	
+			
+			return Actor;
+		}
+	}
 
-
-
-
+	return NULL;
 }
