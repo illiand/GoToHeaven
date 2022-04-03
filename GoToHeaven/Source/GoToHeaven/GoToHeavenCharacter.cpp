@@ -47,6 +47,7 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 	affectVision();
 
 	timelift -= DeltaTime;
+	currentTime += DeltaTime;
 }
 
 void AGoToHeavenCharacter::drink()
@@ -168,4 +169,23 @@ void AGoToHeavenCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AGoToHeavenCharacter::Episodes()
+{	
+	//episode 1
+	float episode = 0; 
+	
+	if (currentTime < )
+	{
+
+	}
+
+
+
+
+
+
+
+
 }
