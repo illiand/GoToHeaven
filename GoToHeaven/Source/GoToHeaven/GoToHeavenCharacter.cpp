@@ -113,6 +113,8 @@ void AGoToHeavenCharacter::affectVision()
 		{
 			ui->changeWBackgroundAlpha(0.0f);
 		}
+
+		this->getname
 	}
 }
 
@@ -182,7 +184,7 @@ void AGoToHeavenCharacter::Episodes()
 	}
 
 
-
+	
 
 
 
