@@ -62,7 +62,7 @@ protected:
 
 	AActor* getObjectName(FString name);
 
-	void Episodes();
+	void Episodes(float deltaTime);
 	
 protected:
 	// APawn interface
@@ -77,8 +77,6 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
-	void drink();
-	void drinkProcess();
 	void affectVision();
 
 public:
@@ -88,5 +86,7 @@ public:
 
 	TArray<FTimerHandle*> timers;
 	TArray<float> timersElipsed;
+
+	TArray<bool> triggeredEvent;
 };
 

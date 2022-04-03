@@ -11,8 +11,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
-#include "Kismet/GameplayStatics.h"
+#include "Engine/RectLight.h"
+#include "Engine/StaticMeshActor.h"
 #include "Components/RectLightComponent.h"
+#include "Materials/MaterialInstanceConstant.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -39,6 +41,7 @@ void AGoToHeavenCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+	currentTime = 65;
 }
 
 void AGoToHeavenCharacter::Tick(float DeltaTime)
@@ -46,46 +49,7 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	value = FMath::Clamp(value - DeltaTime, 0.0f, 200.0f);
-	affectVision();
-	Episodes();
-	timelift -= DeltaTime;
-	currentTime += DeltaTime;
-}
-
-void AGoToHeavenCharacter::drink()
-{
-	FTimerHandle* curTimer = new FTimerHandle();
-	timers.Add(curTimer);
-	timersElipsed.Add(0);
-
-	GetWorldTimerManager().SetTimer(*curTimer, this, &AGoToHeavenCharacter::drinkProcess, 0.167, true, 0);
-}
-
-void AGoToHeavenCharacter::drinkProcess()
-{
-	for (int i = 0; i < timers.Num(); i += 1)
-	{
-		float timerRate = GetWorldTimerManager().GetTimerRate(*timers[i]) * 11;
-
-		value += timerRate;
-		value = FMath::Clamp(value, 0.0f, 200.0f);
-		timersElipsed[i] += timerRate;
-
-		affectVision();
-
-		UE_LOG(LogTemp, Warning, TEXT("i = %d, v = %f time = %f"), timers.Num(), value, GetWorldTimerManager().GetTimerRate(*timers[i]));
-
-		if (timersElipsed[i] > 33.3f)
-		{
-			GetWorldTimerManager().ClearTimer(*timers[i]);
-			delete(timers[i]);
-
-			timers.RemoveAt(i);
-			timersElipsed.RemoveAt(i);
-
-			i -= 1;
-		}
-	}
+	Episodes(DeltaTime);
 }
 
 void AGoToHeavenCharacter::affectVision()
@@ -138,8 +102,6 @@ void AGoToHeavenCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAxis("TurnRate", this, &AGoToHeavenCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AGoToHeavenCharacter::LookUpAtRate);
-
-	PlayerInputComponent->BindAction("Drink", IE_Released, this, &AGoToHeavenCharacter::drink);
 }
 
 
@@ -173,14 +135,80 @@ void AGoToHeavenCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AGoToHeavenCharacter::Episodes()
+void AGoToHeavenCharacter::Episodes(float deltaTime)
 {	
-	//episode 1
-	if (currentTime > 2.0f)
+	currentTime += deltaTime;
+
+	TArray<bool> triggered;
+	
+	for (int i = 0; i < 5 * 3; i += 1)
 	{
-		AActor* object = getObjectName("light1"); 
-		//Cast<URectLightComponent>(object)->SetIntensity(10000);
+		triggered.Add(false);
 	}
+
+	//photo
+	if (60 <= currentTime && currentTime <= 65)
+	{
+		AActor* object = getObjectName("light0"); 
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(0, 312500, (currentTime - 60.0f) / 5.0f));
+	}
+
+	if (65 <= currentTime && currentTime <= 70)
+	{
+		AActor* object = getObjectName("light0");
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(312500, 0, (currentTime - 65.0f) / 5.0f));
+
+	}
+
+	if (67.5f <= currentTime && currentTime <= 72.5f)
+	{
+		TArray<AActor*> posts;
+		posts.Add(getObjectName("Plane2_8"));
+		posts.Add(getObjectName("Plane3_11"));
+		posts.Add(getObjectName("Plane4_14"));
+
+		for (int i = 0; i < 3; i += 1) 
+		{
+			Cast<AStaticMeshActor>(posts[i])->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("lightness"), FMath::Lerp(1.0f, 0.025f, (currentTime - 67.5f) / 5.0f));
+		}
+	}
+
+
+	if (currentTime > 90 && !triggered[3])
+	{
+		AActor* object = getObjectName("light1");
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(312500);
+
+		triggered[3] = true;
+	}
+
+
+	if (currentTime > 120 && !triggered[6])
+	{
+		AActor* object = getObjectName("light2");
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(312500);
+
+		triggered[6] = true;
+	}
+
+
+	if (currentTime > 150 && !triggered[9])
+	{
+		AActor* object = getObjectName("light3");
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(312500);
+
+		triggered[9] = true;
+	}
+
+
+	if (currentTime > 180 && !triggered[12])
+	{
+		AActor* object = getObjectName("light4");
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(312500);
+
+		triggered[12] = true;
+	}
+
 }
 
 AActor* AGoToHeavenCharacter::getObjectName(FString name)
@@ -191,7 +219,7 @@ AActor* AGoToHeavenCharacter::getObjectName(FString name)
 
 	for (AActor* Actor : Actors)
 	{	
-		//UE_LOG(LogTemp, Warning, TEXT("%s"), *UKismetSystemLibrary::GetDisplayName(Actor));
+		//UE_LOG(LogTemp, Warning, TEXT("NAME = %s"), *Actor->GetName());
 		if (Actor->GetName() == name)
 		{	
 			return Actor;
