@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/ActorComponent.h"
+#include "MyUserWidget.h"
 #include "subwayPawn.generated.h"
 
 class UInputComponent;
@@ -42,6 +43,9 @@ public:
 	void SwitchLevel(float direction);
 
 	TArray<FString> levels;
+
+	UPROPERTY(BlueprintReadWrite)
+	UMyUserWidget* ui;
 
 protected:
 	// Called when the game starts or when spawned
