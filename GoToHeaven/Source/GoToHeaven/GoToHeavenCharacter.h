@@ -91,6 +91,7 @@ public:
 
 	TArray<float> lightIntensityRecords;
 	TArray<AActor*> lights;
+	TArray<ULightComponent*> lightComponents;
 	TArray<UStaticMeshComponent*> meshes;
 
 	void getLightSource();
