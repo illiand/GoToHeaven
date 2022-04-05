@@ -20,6 +20,7 @@
 #include "Engine/Light.h"
 #include "Sound/AmbientSound.h"
 #include "Components/AudioComponent.h"
+#include "MySaveGame.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -47,6 +48,10 @@ void AGoToHeavenCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	currentTime = 0;
+	value = 100;
+	ui->changeWBackgroundAlpha(1);
+
+	setValueInLightSource(0.005f);
 
 	triggeredEvent.Add(false);
 
@@ -65,37 +70,25 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	value = FMath::Clamp(value - DeltaTime, 0.0f, 200.0f);
 	timelift -= DeltaTime;
 	Episodes(DeltaTime);
+
+	affectVision();
 }
 
 void AGoToHeavenCharacter::affectVision()
 {
 	float limit = 100.0f;
-	float maskLimit = 20.0f;
+	float maskLimit = 80.0f;
 	
 	if (value <= limit) 
 	{
-		((FPostProcessSettings*)GetWorld()->PostProcessVolumes[0]->GetProperties().Settings)->DepthOfFieldFocalDistance = FMath::Lerp(50.0f, 0.01f, value / limit);
+		((FPostProcessSettings*)GetWorld()->PostProcessVolumes[0]->GetProperties().Settings)->DepthOfFieldFocalDistance = FMath::Lerp(100.0f, 0.01f, value / limit);
 
 		//change mask a
 		if (value > limit - maskLimit)
 		{
 			ui->changeWBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (value - (limit - maskLimit)) / maskLimit));
-		}
-	}
-	else 
-	{
-		((FPostProcessSettings*)GetWorld()->PostProcessVolumes[0]->GetProperties().Settings)->DepthOfFieldFocalDistance = FMath::Lerp(0.01f, 50.0f, (value - limit) / limit);
-
-		if (value < limit + maskLimit)
-		{
-			ui->changeWBackgroundAlpha(FMath::Lerp(1.0f, 0.0f, (value - limit) / maskLimit));
-		}
-		else 
-		{
-			ui->changeWBackgroundAlpha(0.0f);
 		}
 	}
 }
@@ -164,7 +157,12 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		triggered.Add(false);
 	}
 
-	if (2 <= currentTime && currentTime <= 3 && !Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->IsPlaying())
+	if (2 <= currentTime && currentTime <= 7)
+	{
+		value -= deltaTime * 20.0f;
+	}
+
+	if (6 <= currentTime && currentTime <= 7 && !Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->IsPlaying())
 	{
 		Cast<AAmbientSound>(getObjectName("BarSound"))->Play();
 	}
@@ -205,7 +203,7 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		AActor* object = getObjectName("light0");
 		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 95.0f) / 3.0f));
 
-		if (98 <= currentTime)
+		if (97 <= currentTime)
 		{
 			Cast<AAmbientSound>(getObjectName("PostSound"))->Stop();
 		}
@@ -304,6 +302,7 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 	{
 		triggered[0] = true;
 
+		//posts became black
 		TArray<AActor*> posts;
 		posts.Add(getObjectName("Plane2_8"));
 		posts.Add(getObjectName("Plane3_11"));
@@ -313,6 +312,50 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		{
 			Cast<AStaticMeshActor>(posts[i])->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("lightness"), FMath::Lerp(1.0f, 0.025f, (currentTime - 67.5f) / 5.0f));
 		}
+
+		//cup
+		TArray<AActor*> breakCup;
+		UGameplayStatics::GetAllActorsWithTag(GetWorld(), "BreakCup", breakCup);
+
+		for (int i = 0; i < breakCup.Num(); i += 1)
+		{
+			breakCup[i]->SetActorLocation(FVector(breakCup[i]->GetActorLocation().X, 257, breakCup[i]->GetActorLocation().Z));
+		}
+
+		//disappear
+		TArray<AActor*> toDelete;
+		UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Key", toDelete);
+
+		for (int i = 0; i < toDelete.Num(); i += 1)
+		{
+			toDelete[i]->Destroy();
+		}
+	}
+
+	if (180 < currentTime && currentTime < 185) 
+	{
+		FVector startPos = FVector(-1070.0f, -100.0f, 240);
+		FRotator startRotation = FRotator(0, -90, 0);
+		FVector endPos = FVector(-880.0f, -100.0f, 140);
+		FRotator endRotation = FRotator(0, -90, -290.000519f);
+
+		AActor* object = getObjectName("mic_2");
+		object->SetActorLocation(FMath::Lerp(startPos, endPos, (currentTime - 180.0f) / 5.0f));
+		object->SetActorRotation(FMath::Lerp(startRotation, endRotation, (currentTime - 180.0f) / 5.0f));
+	}
+
+	if (200 < currentTime && currentTime < 205)
+	{
+		value += deltaTime * 20.0f;
+	}
+
+	if (207 < currentTime) 
+	{
+		UMySaveGame* saveData = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("SaveData0", 0));
+		saveData->gameStatus = 1;
+		UGameplayStatics::SaveGameToSlot(saveData, "SaveData0", 0);
+
+		UGameplayStatics::OpenLevel(GetWorld(), "Subway");
 	}
 }
 
@@ -324,7 +367,6 @@ AActor* AGoToHeavenCharacter::getObjectName(FString name)
 
 	for (AActor* Actor : Actors)
 	{	
-		//UE_LOG(LogTemp, Warning, TEXT("NAME = %s"), *Actor->GetName());
 		if (Actor->GetName() == name)
 		{	
 			return Actor;
