@@ -10,6 +10,10 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h"
 #include "Components/ActorComponent.h"
+#include "Engine/SkyLight.h"
+#include "Components/SkyLightComponent.h"
+#include "Math/UnrealMathVectorCommon.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AsubwayPawn::AsubwayPawn()
@@ -34,7 +38,7 @@ void AsubwayPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	currentTime = 0;
+	currentTime = 17;
 	
 }
 
@@ -115,20 +119,25 @@ void AsubwayPawn::lightChange(float deltaTime)
 {
 	currentTime += deltaTime;
 
-	//if (30 <= currentTime && currentTime <= 40)
-	//{
-	//	AActor* object = getObjectName("light1");
-	//	// dark to bright
-	//	// Cast<Light>(object)->Component->SetIntensity(FMath::Lerp(begin, end, (currentTime - 60.0f) / 10.0f));
-	//}
+	if (20 <= currentTime && currentTime <= 25)
+	{
+		AActor* object = getObjectName("SkyLight_1");
+		// dark to bright
+		Cast<ASkyLight>(object)->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(0, 800, (currentTime - 20.0f)/5.0f, EEasingFunc::CircularIn));
+	}
 
-	//if (40 <= currentTime && currentTime <= 60)
-	//{
-	//	AActor* object = getObjectName("cloud");
-	//	// cloud outside
-	//	bool cubeHide = true;
-	//	object->SetActorHiddenInGame(cubeHide);
-	//}
+	if (25 <= currentTime && currentTime <= 30)
+	{
+		AActor* object = getObjectName("SkyLight_1");
+		// bright to normal
+		Cast<ASkyLight>(object)->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(800, 0, (currentTime - 25.0f) / 5.0f, EEasingFunc::CircularOut));
+		if (27 <= currentTime && currentTime <= 30)
+		{
+
+		}
+	}
+
+	
 
 	//if (5 <= currenttime && currenttime <= 10)
 	//{
