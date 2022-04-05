@@ -12,8 +12,10 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "Engine/RectLight.h"
+#include "Engine/SpotLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/RectLightComponent.h"
+#include "Components/SpotLightComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Engine/Light.h"
 
@@ -43,6 +45,8 @@ void AGoToHeavenCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 	currentTime = 53.6f;
+
+	triggeredEvent.Add(false);
 
 	getLightSource();
 }
@@ -152,62 +156,93 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 
 	if (55 <= currentTime && currentTime <= 60)
 	{
-		setValueInLightSource(FMath::Lerp(1.0f, 0.00001f, (currentTime - 55.0f) / 5.0f));
+		setValueInLightSource(FMath::Lerp(1.0f, 0.005f, (currentTime - 55.0f) / 5.0f));
 	}
+
+	float lightStrength = 135000;
 
 	//photo
 	if (60 <= currentTime && currentTime <= 65)
 	{
 		AActor* object = getObjectName("light0"); 
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(0, 82500, (currentTime - 60.0f) / 5.0f));
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 60.0f) / 5.0f));
+
+		UE_LOG(LogTemp, Warning, TEXT("NAME = %f"), FVector::DotProduct(object->GetActorLocation() - GetActorLocation(), GetActorForwardVector()));
+
+		if (FVector::DotProduct(object->GetActorLocation() - GetActorLocation(), GetActorForwardVector()) > 0)
+		{
+			//currentTime -= deltaTime;
+		}
 	}
 
-	if (65 <= currentTime && currentTime <= 70)
+	if (65 <= currentTime && currentTime <= 68)
 	{
 		AActor* object = getObjectName("light0");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(82500, 0, (currentTime - 65.0f) / 5.0f));
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 65.0f) / 3.0f));
 	}
 
-
-
-
-	if (currentTime > 90 && !triggered[3])
+	//drum
+	if (70 <= currentTime && currentTime <= 75)
 	{
-		AActor* object = getObjectName("light1");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(82500);
-
-		triggered[3] = true;
+		AActor* object = getObjectName("DrumLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 70.0f) / 5.0f));
 	}
 
-
-	if (currentTime > 120 && !triggered[6])
+	if (75 <= currentTime && currentTime <= 78)
 	{
-		AActor* object = getObjectName("light2");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(82500);
-
-		triggered[6] = true;
+		AActor* object = getObjectName("DrumLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 75.0f) / 3.0f));
 	}
 
-
-	if (currentTime > 150 && !triggered[9])
+	//wine
+	if (80 <= currentTime && currentTime <= 85)
 	{
-		AActor* object = getObjectName("light3");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(82500);
-
-		triggered[9] = true;
+		AActor* object = getObjectName("WineLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 80.0f) / 5.0f));
 	}
 
-
-	if (currentTime > 180 && !triggered[12])
+	if (85 <= currentTime && currentTime <= 88)
 	{
-		AActor* object = getObjectName("light4");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(312500);
-
-		triggered[12] = true;
+		AActor* object = getObjectName("WineLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 85.0f) / 3.0f));
 	}
 
-	if (210 <= currentTime && currentTime <= 220)
+	//gift
+	if (90 <= currentTime && currentTime <= 95)
 	{
+		AActor* object = getObjectName("GiftLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 90.0f) / 5.0f));
+	}
+
+	if (95 <= currentTime && currentTime <= 98)
+	{
+		AActor* object = getObjectName("GiftLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 95.0f) / 3.0f));
+	}
+
+	//ring
+	if (100 <= currentTime && currentTime <= 105)
+	{
+		AActor* object = getObjectName("RingLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 100.0f) / 5.0f));
+	}
+
+	if (105 <= currentTime && currentTime <= 108)
+	{
+		AActor* object = getObjectName("RingLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 105.0f) / 3.0f));
+	}
+
+	//become light
+	if (120 <= currentTime && currentTime <= 130)
+	{
+		setValueInLightSource(FMath::Lerp(0.005f, 1.0f, (currentTime - 120.0f) / 10.0f));
+	}
+
+	if (currentTime > 125 && !triggered[0])
+	{
+		triggered[0] = true;
+
 		TArray<AActor*> posts;
 		posts.Add(getObjectName("Plane2_8"));
 		posts.Add(getObjectName("Plane3_11"));
@@ -349,7 +384,7 @@ void AGoToHeavenCharacter::setValueInLightSource(float a)
 
 		if (lights[i]->ActorHasTag("Environment")) 
 		{
-			Cast<ALight>(lights[i])->SetBrightness(FMath::Lerp(0.1f, 1.0f, a) * lightIntensityRecords[i]);
+			Cast<ALight>(lights[i])->SetBrightness(FMath::Lerp(0.18f, 1.0f, a) * lightIntensityRecords[i]);
 		}
 	}
 
