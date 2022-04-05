@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/ActorComponent.h"
 #include "subwayPawn.generated.h"
 
 class UInputComponent;
@@ -35,6 +37,11 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	
+	float currentTime = 0.0f;
+
+	void SwitchLevel(float direction);
+
+	TArray<FString> levels;
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,6 +68,10 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
+
+	AActor* getObjectName(FString name);
+
+	void lightChange(float deltaTime);
 
 public:	
 	// Called every frame

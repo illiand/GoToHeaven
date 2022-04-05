@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h"
+#include "Components/ActorComponent.h"
 
 // Sets default values
 AsubwayPawn::AsubwayPawn()
@@ -21,6 +22,11 @@ AsubwayPawn::AsubwayPawn()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
+
+	levels.Add("Subway");
+	levels.Add("MainMap");
+
+
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +34,7 @@ void AsubwayPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	currentTime = 0;
 	
 }
 
@@ -36,6 +42,8 @@ void AsubwayPawn::BeginPlay()
 void AsubwayPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	lightChange(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -83,4 +91,73 @@ void AsubwayPawn::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+AActor* AsubwayPawn::getObjectName(FString name)
+{
+	//get objects
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
+
+	for (AActor* Actor : Actors)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("NAME = %s"), *Actor->GetName());
+		if (Actor->GetName() == name)
+		{
+			return Actor;
+		}
+	}
+
+	return NULL;
+}
+
+void AsubwayPawn::lightChange(float deltaTime)
+{
+	currentTime += deltaTime;
+
+	//if (30 <= currentTime && currentTime <= 40)
+	//{
+	//	AActor* object = getObjectName("light1");
+	//	// dark to bright
+	//	// Cast<Light>(object)->Component->SetIntensity(FMath::Lerp(begin, end, (currentTime - 60.0f) / 10.0f));
+	//}
+
+	//if (40 <= currentTime && currentTime <= 60)
+	//{
+	//	AActor* object = getObjectName("cloud");
+	//	// cloud outside
+	//	bool cubeHide = true;
+	//	object->SetActorHiddenInGame(cubeHide);
+	//}
+
+	if (5 <= currentTime && currentTime <= 10)
+	{
+		// AActor* object = getObjectName("light2");
+		// transit to club
+		SwitchLevel(1);
+
+	}
+}	
+
+void AsubwayPawn::SwitchLevel(float direction)
+{
+	if (direction)
+	{
+		FString current = GetWorld()->GetMapName();
+		current.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+
+		for (int i = 0; i < levels.Num(); i++)
+		{
+			if (current == levels[i])
+			{
+				if (i == 0 && direction < 0)
+				{
+					i = levels.Num();
+				}
+				UGameplayStatics::OpenLevel(GetWorld(), FName(levels[i + direction]));
+				break;
+			}
+		}
+
+	}
 }
