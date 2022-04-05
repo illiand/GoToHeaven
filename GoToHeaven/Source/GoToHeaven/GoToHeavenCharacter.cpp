@@ -47,9 +47,9 @@ void AGoToHeavenCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	currentTime = 178;//53;
-	value = 0;
-	ui->changeWBackgroundAlpha(0);
+	currentTime = 53;
+	value = 100;
+	ui->changeWBackgroundAlpha(1);
 
 	setValueInLightSource(0.005f);
 
