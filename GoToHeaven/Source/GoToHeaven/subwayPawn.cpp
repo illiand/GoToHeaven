@@ -41,7 +41,7 @@ void AsubwayPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	currentTime = 28;
+	currentTime = 0;
 	
 }
 
