@@ -47,7 +47,7 @@ void AGoToHeavenCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	currentTime = 0;
+	currentTime = 53;
 	value = 100;
 	ui->changeWBackgroundAlpha(1);
 
@@ -157,24 +157,24 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		triggered.Add(false);
 	}
 
-	if (2 <= currentTime && currentTime <= 7)
+	if (55 <= currentTime && currentTime <= 60)
 	{
 		value -= deltaTime * 20.0f;
 	}
 
-	if (6 <= currentTime && currentTime <= 7 && !Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->IsPlaying())
+	if (53 <= currentTime && currentTime <= 56 && !Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->IsPlaying())
 	{
-		Cast<AAmbientSound>(getObjectName("BarSound"))->Play();
+		Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->FadeIn(5);
 	}
 
-	if (55 <= currentTime && currentTime < 85)
+	if (65 <= currentTime && currentTime < 85)
 	{
 		setValueInLightSource(FMath::Lerp(1.0f, 0.005f, (currentTime - 55.0f) / 30.0f));
 	}
 
-	if (84 <= currentTime && currentTime <= 85) 
+	if (75 <= currentTime && currentTime <= 85) 
 	{
-		Cast<AAmbientSound>(getObjectName("BarSound"))->Stop();
+		Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->FadeOut(10, 0);
 	}
 
 	float lightStrength = 135000;
@@ -192,9 +192,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 			//currentTime -= deltaTime;
 		}
 
-		if (85 <= currentTime && !Cast<AAmbientSound>(getObjectName("BarSound"))->GetAudioComponent()->IsPlaying())
+		if (85 <= currentTime && !Cast<AAmbientSound>(getObjectName("PostSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("PostSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("PostSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 
@@ -205,7 +205,7 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 
 		if (97 <= currentTime)
 		{
-			Cast<AAmbientSound>(getObjectName("PostSound"))->Stop();
+			Cast<AAmbientSound>(getObjectName("PostSound"))->GetAudioComponent()->FadeOut(1, 0);
 		}
 	}
 
@@ -215,9 +215,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		AActor* object = getObjectName("DrumLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 100.0f) / 5.0f));
 
-		if (101 <= currentTime && !Cast<AAmbientSound>(getObjectName("DrumSound"))->GetAudioComponent()->IsPlaying())
+		if (100 <= currentTime && !Cast<AAmbientSound>(getObjectName("DrumSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("DrumSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("DrumSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 
@@ -225,11 +225,10 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 	{
 		AActor* object = getObjectName("DrumLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 105.0f) / 3.0f));
-		Cast<AAmbientSound>(getObjectName("DrumSound"))->Stop();
 
-		if (108 <= currentTime)
+		if (105 <= currentTime)
 		{
-			Cast<AAmbientSound>(getObjectName("DrumSound"))->Stop();
+			Cast<AAmbientSound>(getObjectName("DrumSound"))->GetAudioComponent()->FadeOut(1, 0);
 		}
 	}
 
@@ -239,9 +238,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		AActor* object = getObjectName("WineLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 110.0f) / 5.0f));
 
-		if (111 <= currentTime && !Cast<AAmbientSound>(getObjectName("WineSound"))->GetAudioComponent()->IsPlaying())
+		if (110 <= currentTime && !Cast<AAmbientSound>(getObjectName("WineSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("WineSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("WineSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 
@@ -257,9 +256,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		AActor* object = getObjectName("GiftLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 125.0f) / 5.0f));
 		
-		if (126 <= currentTime && !Cast<AAmbientSound>(getObjectName("GiftSound"))->GetAudioComponent()->IsPlaying())
+		if (125 <= currentTime && !Cast<AAmbientSound>(getObjectName("GiftSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("GiftSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("GiftSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 
@@ -275,9 +274,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		AActor* object = getObjectName("RingLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 145.0f) / 5.0f));
 
-		if (146 <= currentTime && !Cast<AAmbientSound>(getObjectName("RingSound"))->GetAudioComponent()->IsPlaying())
+		if (145 <= currentTime && !Cast<AAmbientSound>(getObjectName("RingSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("RingSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("RingSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 
@@ -294,7 +293,7 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		
 		if (!Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("BoomSound"))->Play();
+			Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeIn(1);
 		}
 	}
 

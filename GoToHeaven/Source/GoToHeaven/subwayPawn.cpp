@@ -23,6 +23,8 @@
 #include "Engine/PostProcessVolume.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MySaveGame.h"
+#include "Sound/AmbientSound.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AsubwayPawn::AsubwayPawn()
@@ -43,9 +45,8 @@ void AsubwayPawn::BeginPlay()
 	Super::BeginPlay();
 
 	currentTime = 0;
-	
-	gameEnd = false;
-
+	Cast<AAmbientSound>(getObjectName("BoomSound"))->Stop();
+	Cast<AAmbientSound>(getObjectName("SubwaySound"))->Stop();
 
 	if (Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("SaveData0", 0)) == NULL)
 	{
@@ -56,6 +57,23 @@ void AsubwayPawn::BeginPlay()
 	else
 	{
 		gameStatus = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("SaveData0", 0))->gameStatus;
+	}
+
+
+	if (gameStatus == 1) 
+	{
+		Cast<AStaticMeshActor>(getObjectName("blackWall_1"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+		Cast<AStaticMeshActor>(getObjectName("blackWall_2"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+		Cast<AStaticMeshActor>(getObjectName("blackWall_3"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+		Cast<AStaticMeshActor>(getObjectName("blackWall_4"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+		Cast<AStaticMeshActor>(getObjectName("blackWall_5"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+		Cast<AStaticMeshActor>(getObjectName("blackWall_6"))->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("transparency"), 0);
+
+		Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeIn(1);
+	}
+	else 
+	{
+		Cast<AAmbientSound>(getObjectName("SubwaySound"))->GetAudioComponent()->FadeIn(1);
 	}
 }
 
@@ -167,19 +185,19 @@ void AsubwayPawn::lightChange(float deltaTime)
 			}
 		}
 
-		if (30 <= currentTime && currentTime <= 35)
+		if (38 <= currentTime && currentTime <= 43)
 		{
-			((FPostProcessSettings*)Cast<APostProcessVolume>(getObjectName("PPV"))->GetProperties().Settings)->DepthOfFieldFocalDistance = UKismetMathLibrary::Ease(0.0f, 0.5f, (currentTime - 33.0f) / 2.0f, EEasingFunc::CircularIn);
+			((FPostProcessSettings*)Cast<APostProcessVolume>(getObjectName("PPV"))->GetProperties().Settings)->DepthOfFieldFocalDistance = UKismetMathLibrary::Ease(0.0f, 0.5f, (currentTime - 38.0f) / 2.0f, EEasingFunc::CircularIn);
 			//UE_LOG(LogTemp, Warning, TEXT("%d"), getObjectName("PPV"));
-			if (currentTime > 33)
+			if (currentTime > 41)
 			{
-				ui->changeWBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 33) / 2.0f));
+				ui->changeWBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 41.0f) / 2.0f));
 
 				//UE_LOG(LogTemp, Warning, TEXT("%d"), getObjectName("PPV"));
 			}
 		}
 
-		if (currentTime >= 36)
+		if (currentTime >= 45)
 		{
 			// transit to club
 			UGameplayStatics::OpenLevel(GetWorld(), "MainMap");
@@ -187,32 +205,18 @@ void AsubwayPawn::lightChange(float deltaTime)
 	}
 	else 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OK"));
-
-		if (0 <= currentTime && currentTime <= 10)
+		if (5 <= currentTime && currentTime <= 10)
 		{
-			Cast<ASkyLight>(getObjectName("SkyLight_1"))->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(0, 700, (currentTime - 20.0f) / 7.0f, EEasingFunc::CircularIn));
+			ui->changeWBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 5.0f) / 5.0f));
 		}
-		if (10 <= currentTime && currentTime <= 10)
+		if (11 <= currentTime && currentTime <= 15)
 		{
-			float endTime = 50;
-			Cast<ASkyLight>(getObjectName("SkyLight_1"))->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(700, 0, (currentTime - 20.0f) / 7.0f, EEasingFunc::CircularIn));
-	
-			Cast<APointLight>(getObjectName("lamp_1"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
-			Cast<APointLight>(getObjectName("lamp_2"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
-			Cast<APointLight>(getObjectName("lamp_3"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
-			Cast<APointLight>(getObjectName("lamp_4"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
-
-			Cast<ADirectionalLight>(getObjectName("LightSource"))->GetLightComponent()->SetIntensity(FMath::Lerp(2.75f, 0.0f, (currentTime - endTime) / 7.0f));
-		
-			gameEnd = true;
+			ui->changeBBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 11.0f) / 4.0f));
 		}
-
-		if (gameEnd)
+		if (13 <= currentTime)
 		{
-			FGenericPlatformMisc::RequestExit(true);
+			Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeOut(5, 0);
 		}
-
 	}
 
 }	

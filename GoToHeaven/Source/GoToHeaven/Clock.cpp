@@ -44,8 +44,8 @@ void AClock::Tick(float DeltaTime)
 	Cast<UStaticMeshComponent>(GetDefaultSubobjectByName(TEXT("haguruma3")))->AddLocalRotation(FRotator(8 * DeltaTime, 0, 0));
 	Cast<UStaticMeshComponent>(GetDefaultSubobjectByName(TEXT("haguruma4")))->AddLocalRotation(FRotator(-8 * DeltaTime, 0, 0));
 
-	float value = Cast<AGoToHeavenCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->timelift;
-	float realTime = FMath::Lerp(0, 46800, value / 300.0f);
+	float value = 240.0f - Cast<AGoToHeavenCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->currentTime;
+	float realTime = FMath::Lerp(0, 46800, value / 240.0f);
 	
 	float h = realTime / 3600.0f;
 	float min = FMath::Fmod(realTime / 60.0f, 60.0f);
@@ -59,13 +59,13 @@ void AClock::Tick(float DeltaTime)
 	//light
 	FVector v;
 
-	if (value < 150)
+	if (value < 120)
 	{
-		v = FMath::Lerp(FVector(1, 0, 0), FVector(1, 1, 0), value / 150.0f);
+		v = FMath::Lerp(FVector(1, 0, 0), FVector(1, 1, 0), value / 120.0f);
 	}
 	else
 	{
-		v = FMath::Lerp(FVector(1, 1, 0), FVector(0, 1, 0), (value - 150) / 150.0f);
+		v = FMath::Lerp(FVector(1, 1, 0), FVector(0, 1, 0), (value - 120.0f) / 120.0f);
 	}
 
 	for (int i = 0; i < materials.Num(); i += 1)
