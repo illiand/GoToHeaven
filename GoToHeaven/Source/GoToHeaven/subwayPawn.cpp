@@ -213,6 +213,10 @@ void AsubwayPawn::lightChange(float deltaTime)
 		{
 			ui->changeBBackgroundAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 11.0f) / 4.0f));
 		}
+		if (15 <= currentTime && currentTime <= 17)
+		{
+			ui->changeTextAlpha(FMath::Lerp(0.0f, 1.0f, (currentTime - 15.0f) / 2.0f));
+		}
 		if (13 <= currentTime)
 		{
 			Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeOut(5, 0);

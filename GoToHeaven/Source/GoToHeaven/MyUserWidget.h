@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void changeBBackgroundAlpha(float a);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void changeTextAlpha(float a);
 };
