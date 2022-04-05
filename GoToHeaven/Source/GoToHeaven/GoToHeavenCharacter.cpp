@@ -15,6 +15,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Components/RectLightComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
+#include "Engine/Light.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -41,7 +42,9 @@ void AGoToHeavenCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	currentTime = 65;
+	currentTime = 48;
+
+	getLightSource();
 }
 
 void AGoToHeavenCharacter::Tick(float DeltaTime)
@@ -49,6 +52,7 @@ void AGoToHeavenCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	value = FMath::Clamp(value - DeltaTime, 0.0f, 200.0f);
+	timelift -= DeltaTime;
 	Episodes(DeltaTime);
 }
 
@@ -146,6 +150,11 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		triggered.Add(false);
 	}
 
+	if (55 <= currentTime && currentTime <= 60)
+	{
+		setValueInLightSource(FMath::Lerp(1.0f, 0.00001f, (currentTime - 55.0f) / 5.0f));
+	}
+
 	//photo
 	if (60 <= currentTime && currentTime <= 65)
 	{
@@ -157,21 +166,9 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 	{
 		AActor* object = getObjectName("light0");
 		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(312500, 0, (currentTime - 65.0f) / 5.0f));
-
 	}
 
-	if (67.5f <= currentTime && currentTime <= 72.5f)
-	{
-		TArray<AActor*> posts;
-		posts.Add(getObjectName("Plane2_8"));
-		posts.Add(getObjectName("Plane3_11"));
-		posts.Add(getObjectName("Plane4_14"));
 
-		for (int i = 0; i < 3; i += 1) 
-		{
-			Cast<AStaticMeshActor>(posts[i])->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("lightness"), FMath::Lerp(1.0f, 0.025f, (currentTime - 67.5f) / 5.0f));
-		}
-	}
 
 
 	if (currentTime > 90 && !triggered[3])
@@ -209,6 +206,18 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		triggered[12] = true;
 	}
 
+	if (210 <= currentTime && currentTime <= 220)
+	{
+		TArray<AActor*> posts;
+		posts.Add(getObjectName("Plane2_8"));
+		posts.Add(getObjectName("Plane3_11"));
+		posts.Add(getObjectName("Plane4_14"));
+
+		for (int i = 0; i < 3; i += 1)
+		{
+			Cast<AStaticMeshActor>(posts[i])->GetStaticMeshComponent()->SetScalarParameterValueOnMaterials(TEXT("lightness"), FMath::Lerp(1.0f, 0.025f, (currentTime - 67.5f) / 5.0f));
+		}
+	}
 }
 
 AActor* AGoToHeavenCharacter::getObjectName(FString name)
@@ -227,4 +236,55 @@ AActor* AGoToHeavenCharacter::getObjectName(FString name)
 	}
 
 	return NULL;
+}
+
+void AGoToHeavenCharacter::getLightSource() 
+{
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), actors);
+
+	for (int i = 0; i < actors.Num(); i += 1)
+	{
+		if (!actors[i]->ActorHasTag("HighLight") && (actors[i]->GetClass()->GetName() == "RectLight" || actors[i]->GetClass()->GetName() == "PointLight" || actors[i]->GetClass()->GetName() == "SpotLight"))
+		{
+			lights.Add(actors[i]);
+			lightIntensityRecords.Add(Cast<ALight>(actors[i])->GetBrightness());
+		}
+
+		if (actors[i]->GetName() == "bartablelong_11" || 
+			actors[i]->GetName() == "bartablelong2" ||
+			actors[i]->GetName() == "bartablelong3" || 
+			actors[i]->GetName() == "bartablelong4" || 
+			actors[i]->GetName() == "bartablelong5" || 
+			actors[i]->GetName() == "bartablelong6" ||
+			actors[i]->GetName() == "bartablelong7")
+		{
+			meshes.Add(Cast<AStaticMeshActor>(actors[i])->GetStaticMeshComponent());
+			lightIntensityRecords.Add(15);
+		}
+
+
+
+		if (actors[i]->GetName() == "BP_glasswindow_2" || actors[i]->GetName() == "BP_glasswindow2")
+		{
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("StaticMesh")));
+			lightIntensityRecords.Add(2);
+		}
+	}
+}
+
+void AGoToHeavenCharacter::setValueInLightSource(float a) 
+{
+	for (int i = 0; i < lights.Num(); i += 1)
+	{
+		Cast<ALight>(lights[i])->SetBrightness(a * lightIntensityRecords[i]);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("NAME2 = %d %d %d"), lights.Num(), meshes.Num(), lightIntensityRecords.Num());
+
+	for (int i = 0; i < meshes.Num(); i += 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NAME = %d %d %d %d"), i, lights.Num(), meshes.Num(), lightIntensityRecords.Num());
+		meshes[i]->SetScalarParameterValueOnMaterials("brightness", a * lightIntensityRecords[lights.Num() + i]);
+	}
 }
