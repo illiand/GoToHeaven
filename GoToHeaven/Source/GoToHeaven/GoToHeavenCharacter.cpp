@@ -301,6 +301,23 @@ void AGoToHeavenCharacter::getLightSource()
 			lightIntensityRecords.Add(2);
 		}
 
+		if (actors[i]->GetName() == "BP_stage_2")
+		{
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("line1")));
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("line2")));
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("line3")));
+			lightIntensityRecords.Add(1);
+			lightIntensityRecords.Add(1);
+			lightIntensityRecords.Add(1);
+
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("ring")));
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("ring1")));
+			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("ring2")));
+			lightIntensityRecords.Add(25);
+			lightIntensityRecords.Add(25);
+			lightIntensityRecords.Add(25);
+		}
+
 		if (actors[i]->GetName() == "BP_lightball_2")
 		{
 			meshes.Add(Cast<UStaticMeshComponent>(actors[i]->GetDefaultSubobjectByName("Sphere")));

@@ -130,13 +130,13 @@ void AsubwayPawn::lightChange(float deltaTime)
 	//	object->SetActorHiddenInGame(cubeHide);
 	//}
 
-	if (5 <= currentTime && currentTime <= 10)
-	{
-		// AActor* object = getObjectName("light2");
-		// transit to club
-		SwitchLevel(1);
+	//if (5 <= currenttime && currenttime <= 10)
+	//{
+	//	// aactor* object = getobjectname("light2");
+	//	// transit to club
+	//	switchlevel(1);
 
-	}
+	//}
 }	
 
 void AsubwayPawn::SwitchLevel(float direction)
