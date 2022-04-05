@@ -35,11 +35,6 @@ AsubwayPawn::AsubwayPawn()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-
-	levels.Add("Subway");
-	levels.Add("MainMap");
-
-
 }
 
 // Called when the game starts or when spawned
@@ -187,7 +182,7 @@ void AsubwayPawn::lightChange(float deltaTime)
 		if (currentTime >= 36)
 		{
 			// transit to club
-			SwitchLevel(1);
+			UGameplayStatics::OpenLevel(GetWorld(), "MainMap");
 		}
 	}
 	else 
@@ -221,26 +216,3 @@ void AsubwayPawn::lightChange(float deltaTime)
 	}
 
 }	
-
-void AsubwayPawn::SwitchLevel(float direction)
-{
-	if (direction)
-	{
-		FString current = GetWorld()->GetMapName();
-		current.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
-
-		for (int i = 0; i < levels.Num(); i++)
-		{
-			if (current == levels[i])
-			{
-				if (i == 0 && direction < 0)
-				{
-					i = levels.Num();
-				}
-				UGameplayStatics::OpenLevel(GetWorld(), FName(levels[i + direction]));
-				break;
-			}
-		}
-
-	}
-}
