@@ -154,18 +154,18 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		triggered.Add(false);
 	}
 
-	if (55 <= currentTime && currentTime <= 60)
+	if (55 <= currentTime && currentTime <85)
 	{
-		setValueInLightSource(FMath::Lerp(1.0f, 0.005f, (currentTime - 55.0f) / 5.0f));
+		setValueInLightSource(FMath::Lerp(1.0f, 0.005f, (currentTime - 55.0f) / 30.0f));
 	}
 
 	float lightStrength = 135000;
 
 	//photo
-	if (60 <= currentTime && currentTime <= 65)
+	if (85 <= currentTime && currentTime <=90 )
 	{
 		AActor* object = getObjectName("light0"); 
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 60.0f) / 5.0f));
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 85.0f) / 5.0f));
 
 		UE_LOG(LogTemp, Warning, TEXT("NAME = %f"), FVector::DotProduct(object->GetActorLocation() - GetActorLocation(), GetActorForwardVector()));
 
@@ -175,71 +175,71 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		}
 	}
 
-	if (65 <= currentTime && currentTime <= 68)
+	if (95 <= currentTime && currentTime <= 100)
 	{
 		AActor* object = getObjectName("light0");
-		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 65.0f) / 3.0f));
+		Cast<ARectLight>(object)->RectLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 95.0f) / 5.0f));
 	}
 
 	//drum
-	if (70 <= currentTime && currentTime <= 75)
-	{
-		AActor* object = getObjectName("DrumLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 70.0f) / 5.0f));
-	}
-
-	if (75 <= currentTime && currentTime <= 78)
-	{
-		AActor* object = getObjectName("DrumLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 75.0f) / 3.0f));
-	}
-
-	//wine
-	if (80 <= currentTime && currentTime <= 85)
-	{
-		AActor* object = getObjectName("WineLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 80.0f) / 5.0f));
-	}
-
-	if (85 <= currentTime && currentTime <= 88)
-	{
-		AActor* object = getObjectName("WineLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 85.0f) / 3.0f));
-	}
-
-	//gift
-	if (90 <= currentTime && currentTime <= 95)
-	{
-		AActor* object = getObjectName("GiftLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 90.0f) / 5.0f));
-	}
-
-	if (95 <= currentTime && currentTime <= 98)
-	{
-		AActor* object = getObjectName("GiftLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 95.0f) / 3.0f));
-	}
-
-	//ring
 	if (100 <= currentTime && currentTime <= 105)
 	{
-		AActor* object = getObjectName("RingLight");
+		AActor* object = getObjectName("DrumLight");
 		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 100.0f) / 5.0f));
 	}
 
-	if (105 <= currentTime && currentTime <= 108)
+	if (105 <= currentTime && currentTime <= 110)
+	{
+		AActor* object = getObjectName("DrumLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 105.0f) / 5.0f));
+	}
+
+	//wine
+	if (110 <= currentTime && currentTime <= 115)
+	{
+		AActor* object = getObjectName("WineLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 110.0f) / 5.0f));
+	}
+
+	if (125 <= currentTime && currentTime <= 130)
+	{
+		AActor* object = getObjectName("WineLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 125.0f) / 5.0f));
+	}
+
+	//gift
+	if (130 <= currentTime && currentTime <= 135)
+	{
+		AActor* object = getObjectName("GiftLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 130.0f) / 5.0f));
+	}
+
+	if (150 <= currentTime && currentTime <= 155)
+	{
+		AActor* object = getObjectName("GiftLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 150.0f) / 5.0f));
+	}
+
+	//ring
+	if (155 <= currentTime && currentTime <= 160)
 	{
 		AActor* object = getObjectName("RingLight");
-		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 105.0f) / 3.0f));
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(0, 135000, (currentTime - 155.0f) / 5.0f));
+	}
+
+	if (185 <= currentTime && currentTime <= 190)
+	{
+		AActor* object = getObjectName("RingLight");
+		Cast<ASpotLight>(object)->SpotLightComponent->SetIntensity(FMath::Lerp(135000, 0, (currentTime - 185.0f) / 5.0f));
 	}
 
 	//become light
-	if (120 <= currentTime && currentTime <= 130)
+	if (193 <= currentTime && currentTime <= 200)
 	{
-		setValueInLightSource(FMath::Lerp(0.005f, 1.0f, (currentTime - 120.0f) / 10.0f));
+		setValueInLightSource(FMath::Lerp(0.005f, 1.0f, (currentTime - 193.0f) / 7.0f));
 	}
 
-	if (currentTime > 125 && !triggered[0])
+	if (currentTime > 193 && !triggered[0])
 	{
 		triggered[0] = true;
 
