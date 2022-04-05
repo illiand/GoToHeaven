@@ -47,9 +47,9 @@ void AGoToHeavenCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	currentTime = 53;
-	value = 100;
-	ui->changeWBackgroundAlpha(1);
+	currentTime = 178;//53;
+	value = 0;
+	ui->changeWBackgroundAlpha(0);
 
 	setValueInLightSource(0.005f);
 
@@ -293,11 +293,11 @@ void AGoToHeavenCharacter::Episodes(float deltaTime)
 		
 		if (!Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->IsPlaying())
 		{
-			Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeIn(1);
+			Cast<AAmbientSound>(getObjectName("BoomSound"))->GetAudioComponent()->FadeIn(10);
 		}
 	}
 
-	if (currentTime > 195 && !triggered[0])
+	if (currentTime > 180 && !triggered[0])
 	{
 		triggered[0] = true;
 
