@@ -88,5 +88,13 @@ public:
 	TArray<float> timersElipsed;
 
 	TArray<bool> triggeredEvent;
+
+	TArray<float> lightIntensityRecords;
+	TArray<AActor*> lights;
+	TArray<ULightComponent*> lightComponents;
+	TArray<UStaticMeshComponent*> meshes;
+
+	void getLightSource();
+	void setValueInLightSource(float a);
 };
 
