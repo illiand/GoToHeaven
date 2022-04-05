@@ -47,6 +47,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UMyUserWidget* ui;
 
+	bool gameEnd = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

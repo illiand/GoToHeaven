@@ -12,11 +12,16 @@
 #include "Components/ActorComponent.h"
 #include "Engine/SkyLight.h"
 #include "Components/SkyLightComponent.h"
+#include "Engine/PointLight.h"
+#include "Components/PointLightComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Components/DirectionalLightComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/World.h"
 #include "Interfaces/Interface_PostProcessVolume.h"
 #include "Engine/PostProcessVolume.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AsubwayPawn::AsubwayPawn()
@@ -43,6 +48,7 @@ void AsubwayPawn::BeginPlay()
 
 	currentTime = 0;
 	
+	gameEnd = false;
 }
 
 // Called every frame
@@ -167,6 +173,30 @@ void AsubwayPawn::lightChange(float deltaTime)
 	{
 		// transit to club
 		SwitchLevel(1);
+	}
+
+	//if()
+	{	
+		Cast<ASkyLight>(getObjectName("SkyLight_1"))->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(0, 700, (currentTime - 20.0f) / 7.0f, EEasingFunc::CircularIn));
+	}
+
+	//if ()
+	{	
+		Cast<ASkyLight>(getObjectName("SkyLight_1"))->GetLightComponent()->SetIntensity(UKismetMathLibrary::Ease(700, 0, (currentTime - 20.0f) / 7.0f, EEasingFunc::CircularIn));
+
+		Cast<APointLight>(getObjectName("lamp_1"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
+		Cast<APointLight>(getObjectName("lamp_2"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
+		Cast<APointLight>(getObjectName("lamp_3"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
+		Cast<APointLight>(getObjectName("lamp_4"))->GetLightComponent()->SetIntensity(FMath::Lerp(50, 0, (currentTime - endTime) / 7.0f));
+
+		Cast<ADirectionalLight>(getObjectName("LightSource"))->GetLightComponent()->SetIntensity(FMath::Lerp(2.75f, 0.0f, (currentTime - endTime) / 7.0f));
+		
+		gameEnd = true;
+	}
+
+	if (gameEnd)
+	{
+		FGenericPlatformMisc::RequestExit(true);
 	}
 }	
 
