@@ -40,10 +40,6 @@ public:
 	
 	float currentTime = 0.0f;
 
-	void SwitchLevel(float direction);
-
-	TArray<FString> levels;
-
 	UPROPERTY(BlueprintReadWrite)
 	UMyUserWidget* ui;
 
